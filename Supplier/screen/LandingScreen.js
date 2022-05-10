@@ -16,7 +16,9 @@ const LandingScreen = ({navigation }) => {
   return (
     <ScrollView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
+        <View style={styles.bgPic}>
           <Image source={CYCLINDER_LOGO}/>
+        </View>
           <Text style={styles.text1}>Gas App</Text>
           <Text style={styles.text2}>You order it, we deliver it.</Text>
           <TouchableOpacity
@@ -50,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "20%",
+    marginTop: "10%",
   },
   text1: {
     fontSize: 50,
@@ -89,10 +91,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     padding: 8,
     marginTop: "30%",
+    marginBottom: "10%",
     alignItems: 'center'
   },
   row: {
     flexDirection: 'row',
+  },
+  bgPic: {
+    backgroundColor: "#F3FBFF",
+    borderRadius: 100,
+    padding: 20,
+    margin: 10,
   },
 
 });
