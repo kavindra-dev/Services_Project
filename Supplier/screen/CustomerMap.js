@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,14 +13,34 @@ import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
+import GREEN_ICON from '../assest/location.png';
+
 
 
 const CustomerMap = ({navigation }) => {
+
+  const [focusedLocation, setFocusedLocation] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  const markers = [
+    {
+      title: "My Location",
+      coordinates: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+      },
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
           <MapView
+          region={focusedLocation}
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           initialRegion={{
@@ -28,7 +48,13 @@ const CustomerMap = ({navigation }) => {
             longitude: -122.4324,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
-          }}/>
+          }}>
+            {markers.map((marker,index) => (
+              <MapView.Marker coordinate={marker.coordinates} title={marker.title} draggable>
+                {index === 0 && <Image source={GREEN_ICON} />}
+              </MapView.Marker>
+            ))}
+          </MapView>
       </View>
       <View style={styles.splashBlueImageContainer2}>
           <View style={styles.splashBlueImageContainer3}>
@@ -151,6 +177,15 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
     height:"100%"
+  },
+  topBar: {
+    position: 'absolute',
+    width: 100,
+    top: 20,
+    zIndex: 99,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
   },
 
 });

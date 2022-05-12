@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -10,25 +10,79 @@ import {
   Image,
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import CYCLINDER_LOGO from '../assest/gas_tank.png';
-import Supplier_PIC from '../assest/supplier_option.png';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import CYCLINDER_LOGO from '../assest/customer_pic.png';
+import Supplier_PIC from '../assest/on_way.png';
+import LOGOUT from '../assest/tab_icon_more.png';
 
 
 const SupplierMap = ({navigation }) => {
+
+  const mapRef = useRef();
+  const [focusedLocation, setFocusedLocation] = useState({
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  const markers = [
+    {
+      title: "My Location",
+      coordinates: {
+        latitude: 37.78825,
+        longitude: -122.4324,
+      },
+    },
+    {
+      title: "Location 1",
+      coordinates: {
+        latitude: 37.5245,
+        longitude: -122.4324,
+      },
+    },
+    {
+      title: "Location 2",
+      coordinates: {
+        latitude: 50.78825,
+        longitude: -110.4324,
+      },
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
           <MapView
+          region={focusedLocation}
           provider={PROVIDER_GOOGLE}
           style={styles.map}
+          showsMyLocationButton={true}
+          ref={mapRef}
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
-          }}/>
+          }}>
+            {markers.map((marker,index) => (
+              <MapView.Marker coordinate={marker.coordinates} title={marker.title} draggable>
+                {index === 0 && <Image source={Supplier_PIC} />}
+                {index === 1 && <Image source={CYCLINDER_LOGO} />}
+                {index === 2 && <Image source={CYCLINDER_LOGO} />}
+              </MapView.Marker>
+            ))}
+             
+          </MapView>
+          <View style={styles.topBar}>
+            <View style={styles.left_align}
+            onStartShouldSetResponder={() => navigation.navigate('SupplierLogin')}>
+            <TouchableOpacity>
+            <Image source={LOGOUT} size={28} />
+          </TouchableOpacity> 
+            </View>
+          
+          </View>
       </View>
     </SafeAreaView>
   );
@@ -142,6 +196,23 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  topBar: {
+    position: 'absolute',
+    width: "100%",
+    top: 10,
+    zIndex: 99,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    alignItems: 'flex-start'
+  },
+  left_align: {
+    width: 30,
+    height: 30,
+    backgroundColor: "#FFFFFF",
+    padding: 5,
+    borderRadius: 100,
   },
 
 });

@@ -19,11 +19,11 @@ const Stack = createNativeStackNavigator();
 const MyStack = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Landing}
-        />
+      <Stack.Navigator
+      screenOptions={{
+        headerShown: true
+      }}>
+        <Stack.Screen name="Home" component={Landing}/>
         <Stack.Screen name="SelectCustomer" component={SelectOption} />
         <Stack.Screen name="CustomerLogin" component={CLogin} />
         <Stack.Screen name="CustomerRegister" component={CRegister} />
