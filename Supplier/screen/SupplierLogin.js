@@ -30,7 +30,9 @@ const SupplierLogin = ({navigation }) => {
 
         <TextInput style={styles.input}
           placeholder="Password"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}>
+            {/* <Image source={CYCLINDER_LOGIN} style={styles.imageset}/> */}
+            </TextInput>
         </View>
       </View>
       <View style={styles.splashBlueImageContainer2}>
@@ -40,7 +42,10 @@ const SupplierLogin = ({navigation }) => {
         <View style={styles.splashBlueImageContainer3}>
         <TouchableOpacity
           style={styles.button}>
-            <Text style={styles.buttonText}> Log In </Text>
+            <Text style={styles.buttonText}
+            onPress={() =>
+              navigation.navigate('SupplierMap')
+            }> Log In </Text>
           </TouchableOpacity>
 
           <Text style={styles.text4}
@@ -151,6 +156,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'AvenirNextLTPro-Bold',
+  },
+  imageset: {
+    alignItems: 'flex-end',
+    width: 20,
+    height: 20,
   },
 
 });

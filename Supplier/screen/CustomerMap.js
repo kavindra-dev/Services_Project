@@ -10,50 +10,35 @@ import {
   Image,
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
 
 
-const CustomerLogin = ({navigation }) => {
+const CustomerMap = ({navigation }) => {
 
   return (
-    <ScrollView style={styles.splashFlexGrow}>
+    <SafeAreaView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
-        <Text style={styles.text1}>Log In</Text>
-        <View style={styles.bgPic}>
-          <Image source={CYCLINDER_LOGO}/>
-        </View>
-        
-
-        <View style={styles.datainput}>
-        <TextInput style={styles.input}
-          placeholder="User Name"
-          placeholderTextColor={"#DCDCDC"}/>
-
-        <TextInput style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={"#DCDCDC"}/>
-        </View>
+          <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}/>
       </View>
-      {/* <View style={styles.splashBlueImageContainer2}>
-          <Text style={styles.text3}>Forgot Password </Text>
-        </View> */}
-
-        <View style={styles.splashBlueImageContainer3}>
-        <TouchableOpacity
-          style={styles.button}>
-            <Text style={styles.buttonText}
-            onPress={() =>
-              navigation.navigate('DeliverAddress')
-            }> Log In </Text>
-          </TouchableOpacity>
-
-          <Text style={styles.text4}
-          onPress={() =>
-            navigation.navigate('CustomerRegister')
-          }>Register as a Customer</Text>
-        </View>
-    </ScrollView>
+      <View style={styles.splashBlueImageContainer2}>
+          <View style={styles.splashBlueImageContainer3}>
+          <Image source={Supplier_PIC}
+        style={styles.bgPic}/>
+          </View>
+       
+      </View>
+      <Text style={styles.text1}>Waiting for Supplier to Accept your Order</Text>
+    </SafeAreaView>
   );
 };
 
@@ -67,28 +52,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "10%",
   },
   splashBlueImageContainer3: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
+    width: 80,
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "10%",
+    backgroundColor: "#FFF5F6",
+    borderRadius: 100,
+    marginTop: 10
   },
   splashBlueImageContainer2: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    alignItems: 'flex-start',
-    marginLeft: "10%",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text1: {
-    fontSize: 35,
-    textAlign: 'center',
+    fontSize: 20,
+    textAlign: 'left',
     color: "#000000",
     fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: "10%"
+    marginLeft: 20,
+    marginBottom: 10,
+    marginRight: 10,
+    
   },
   text2: {
     fontSize: 15,
@@ -159,12 +145,14 @@ const styles = StyleSheet.create({
     fontFamily: 'AvenirNextLTPro-Bold',
   },
   bgPic: {
-    backgroundColor: "#F3FBFF",
-    borderRadius: 100,
-    padding: 20,
-    margin: 10,
+    width: 85,
+    height: 85,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+    height:"100%"
   },
 
 });
 
-export default CustomerLogin;
+export default CustomerMap;

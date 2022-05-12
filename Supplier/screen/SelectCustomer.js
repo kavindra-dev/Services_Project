@@ -7,7 +7,8 @@ import {
   Text,
   useColorScheme,
   View,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
@@ -23,11 +24,13 @@ const SelectCustomer = ({navigation}) => {
       </View>
       <View style={styles.splashBlueImageContainer}>
         <View style={styles.row}>
-          <View style={styles.supplies}>
+          <View style={styles.supplies}
+          onStartShouldSetResponder={() => navigation.navigate('SupplierLogin')}>
             <Image source={Supplier_PIC}/>
             <Text style={styles.text3}>Supplier</Text>
           </View>
-          <View style={styles.customer}>
+          <View style={styles.customer}
+          onStartShouldSetResponder={() => navigation.navigate('CustomerLogin')}>
             <Image source={CYCLINDER_LOGO}/>
             <Text style={styles.text3}>Customer</Text>
           </View>

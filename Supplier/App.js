@@ -10,6 +10,9 @@ import CLogin from './screen/CustomerLogin';
 import CRegister from './screen/CustomerRegister';
 import SLogin from './screen/SupplierLogin';
 import SRegister from './screen/SupplierRegister';
+import SMAP from './screen/SupplierMap';
+import DAddress from './screen/DeliverAddress';
+import CMAP from './screen/CustomerMap';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +29,9 @@ const MyStack = () => {
         <Stack.Screen name="CustomerRegister" component={CRegister} />
         <Stack.Screen name="SupplierLogin" component={SLogin} />
         <Stack.Screen name="SupplierRegister" component={SRegister} />
+        <Stack.Screen name="SupplierMap" component={SMAP} />
+        <Stack.Screen name="DeliverAddress" component={DAddress} />
+        <Stack.Screen name="CustomerMap" component={CMAP} />
       </Stack.Navigator>
     </NavigationContainer>
   );

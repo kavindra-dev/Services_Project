@@ -10,50 +10,27 @@ import {
   Image,
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
 
 
-const CustomerLogin = ({navigation }) => {
+const SupplierMap = ({navigation }) => {
 
   return (
-    <ScrollView style={styles.splashFlexGrow}>
+    <SafeAreaView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
-        <Text style={styles.text1}>Log In</Text>
-        <View style={styles.bgPic}>
-          <Image source={CYCLINDER_LOGO}/>
-        </View>
-        
-
-        <View style={styles.datainput}>
-        <TextInput style={styles.input}
-          placeholder="User Name"
-          placeholderTextColor={"#DCDCDC"}/>
-
-        <TextInput style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={"#DCDCDC"}/>
-        </View>
+          <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}/>
       </View>
-      {/* <View style={styles.splashBlueImageContainer2}>
-          <Text style={styles.text3}>Forgot Password </Text>
-        </View> */}
-
-        <View style={styles.splashBlueImageContainer3}>
-        <TouchableOpacity
-          style={styles.button}>
-            <Text style={styles.buttonText}
-            onPress={() =>
-              navigation.navigate('DeliverAddress')
-            }> Log In </Text>
-          </TouchableOpacity>
-
-          <Text style={styles.text4}
-          onPress={() =>
-            navigation.navigate('CustomerRegister')
-          }>Register as a Customer</Text>
-        </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -67,7 +44,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "10%",
   },
   splashBlueImageContainer3: {
     flex: 1,
@@ -164,7 +140,10 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 10,
   },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
 
 });
 
-export default CustomerLogin;
+export default SupplierMap;
