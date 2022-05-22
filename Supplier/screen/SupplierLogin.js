@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,13 +8,41 @@ import {
   useColorScheme,
   View,
   Image,
+  ActivityIndicator,
+  TouchableOpacity,
+  TextInput
 } from 'react-native';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-
+import auth from '@react-native-firebase/auth';
+import firebaserel from '@react-native-firebase/database';
 import CYCLINDER_LOGIN from '../assest/iconsupplierlogin.png';
 
 
 const SupplierLogin = ({navigation }) => {
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [loading,setLoading] = useState(false);
+
+if(loading){
+  return <ActivityIndicator size="large" color="#0000FF"/>
+} 
+
+const supplierLogin = async() =>{
+  setLoading(true)
+  if(!email || !password )
+  {
+    alert("Please enter credential details.")
+    return
+  } else {
+    try {
+      const result = await auth().signInWithEmailAndPassword(email,password)
+      .then(navigation.navigate('SupplierMap'))
+      setLoading(false)
+    } catch (error) {
+      alert("Something went wrong!!! \n Please try again later.")
+      setLoading(false)
+    }  
+  }
+}
 
   return (
     <ScrollView style={styles.splashFlexGrow}>
@@ -25,12 +53,16 @@ const SupplierLogin = ({navigation }) => {
 
         <View style={styles.datainput}>
         <TextInput style={styles.input}
-          placeholder="User Name"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholder="Email"
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={email}
+          onChangeText={(email) => setEmail(email)}/>
 
         <TextInput style={styles.input}
           placeholder="Password"
-          placeholderTextColor={"#DCDCDC"}>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={password}
+          onChangeText={(password) => setPassword(password)}>
             {/* <Image source={CYCLINDER_LOGIN} style={styles.imageset}/> */}
             </TextInput>
         </View>
@@ -41,11 +73,11 @@ const SupplierLogin = ({navigation }) => {
 
         <View style={styles.splashBlueImageContainer3}>
         <TouchableOpacity
-          style={styles.button}>
-            <Text style={styles.buttonText}
-            onPress={() =>
-              navigation.navigate('SupplierMap')
-            }> Log In </Text>
+          style={styles.button}
+          onPress={() =>
+            supplierLogin()
+          }>
+            <Text style={styles.buttonText}> Log In </Text>
           </TouchableOpacity>
 
           <Text style={styles.text4}

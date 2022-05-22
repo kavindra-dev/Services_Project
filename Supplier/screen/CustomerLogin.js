@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,9 +12,35 @@ import {
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
+import auth from '@react-native-firebase/auth';
+import firebaserel from '@react-native-firebase/database';
 
 
 const CustomerLogin = ({navigation }) => {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading,setLoading] = useState(false);
+
+  const customerLogin = async() =>{
+    setLoading(true)
+    if(!email || !password )
+    {
+      alert("Please enter credential details.")
+      return
+    } else {
+      try {
+        const result = await auth().signInWithEmailAndPassword(email,password)
+        .then(navigation.navigate('DeliverAddress'))
+        setLoading(false)
+      } catch (error) {
+        alert("Something went wrong!!! \n Please try again later.")
+        setLoading(false)
+      }  
+    }
+  }
+
+  
 
   return (
     <ScrollView style={styles.splashFlexGrow}>
@@ -28,11 +54,15 @@ const CustomerLogin = ({navigation }) => {
         <View style={styles.datainput}>
         <TextInput style={styles.input}
           placeholder="User Name"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={email}
+          onChangeText={(email) => setEmail(email)}/>
 
         <TextInput style={styles.input}
           placeholder="Password"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={password}
+          onChangeText={(password) => setPassword(password)}/>
         </View>
       </View>
       {/* <View style={styles.splashBlueImageContainer2}>
@@ -43,8 +73,7 @@ const CustomerLogin = ({navigation }) => {
         <TouchableOpacity
           style={styles.button}>
             <Text style={styles.buttonText}
-            onPress={() =>
-              navigation.navigate('DeliverAddress')
+            onPress={() =>  customerLogin()
             }> Log In </Text>
           </TouchableOpacity>
 

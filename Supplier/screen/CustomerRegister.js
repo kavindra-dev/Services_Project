@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,14 +8,59 @@ import {
   useColorScheme,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
+import auth from '@react-native-firebase/auth';
+import firebaserel from '@react-native-firebase/database';
 
 
 const CustomerRegister = ({navigation }) => {
+
+  const [fullName, setFullName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [resetpass, setResetPass] = useState('');
+  const [loading,setLoading] = useState(false);
+
+  if(loading){
+    return <ActivityIndicator size="large" color="#0000FF"/>
+  } 
+
+  const registerCustomer = async() =>{
+    setLoading(true)
+    if(!fullName || !userName || !phone || !email || !password || !resetpass)
+    {
+      alert("Please enter all the details.")
+      return
+    } else if(password !== resetpass){
+      alert("Please enter same password.")
+      return
+    } else {
+      try {
+        const result = await auth().createUserWithEmailAndPassword(email,password);
+        firebaserel().ref('users').child(result.user.uid).set({
+          fullName:fullName,
+          userName:userName,
+          phone:phone,
+          email:result.user.email,
+          password:password,
+          uid:result.user.uid,
+          userType:"2"
+        })
+        .then(navigation.navigate('CustomerRegister'))
+        setLoading(false)
+      } catch (error) {
+        alert("Something went wrong!!! \n Please try again later.")
+        setLoading(false)
+      }
+    }
+  }
 
   return (
     <ScrollView style={styles.splashFlexGrow}>
@@ -25,32 +70,43 @@ const CustomerRegister = ({navigation }) => {
         <View style={styles.datainput}>
           <TextInput style={styles.input}
           placeholder="Full Name"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={fullName}
+          onChangeText={(fullName) => setFullName(fullName)}/>
 
           <TextInput style={styles.input}
           placeholder="User Name"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={userName}
+          onChangeText={(userName) => setUserName(userName)}/>
 
           <TextInput style={styles.input}
           placeholder="Phone Number"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={phone}
+          onChangeText={(phone) => setPhone(phone)}/>
 
           <TextInput style={styles.input}
           placeholder="Email Address"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={email}
+          onChangeText={(email) => setEmail(email)}/>
 
           <TextInput style={styles.input}
           placeholder="Password"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={password}
+          onChangeText={(password) => setPassword(password)}/>
 
           <TextInput style={styles.input}
           placeholder="Retype Password"
-          placeholderTextColor={"#DCDCDC"}/>
+          placeholderTextColor={"#DCDCDC"}
+          defaultValue={resetpass}
+          onChangeText={(resetpass) => setResetPass(resetpass)}/>
 
           <TouchableOpacity
           style={styles.button}
-          onPress={() =>
-            navigation.navigate('SelectCustomer')
+          onPress={() => registerCustomer()
           }>
             <Text style={styles.buttonText}> Log In </Text>
           </TouchableOpacity>
