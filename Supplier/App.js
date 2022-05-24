@@ -13,6 +13,7 @@ import SRegister from './screen/SupplierRegister';
 import SMAP from './screen/SupplierMap';
 import DAddress from './screen/DeliverAddress';
 import CMAP from './screen/CustomerMap';
+import FPASS from './screen/ForgotPassword';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +22,7 @@ const MyStack = () => {
     <NavigationContainer>
       <Stack.Navigator
       screenOptions={{
-        headerShown: true
+        headerShown: false
       }}>
         <Stack.Screen name="Home" component={Landing}/>
         <Stack.Screen name="SelectCustomer" component={SelectOption} />
@@ -32,6 +33,7 @@ const MyStack = () => {
         <Stack.Screen name="SupplierMap" component={SMAP} />
         <Stack.Screen name="DeliverAddress" component={DAddress} />
         <Stack.Screen name="CustomerMap" component={CMAP} />
+        <Stack.Screen name="ForgotPass" component={FPASS} />
       </Stack.Navigator>
     </NavigationContainer>
   );

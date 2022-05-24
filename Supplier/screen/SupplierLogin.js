@@ -68,7 +68,9 @@ const supplierLogin = async() =>{
         </View>
       </View>
       <View style={styles.splashBlueImageContainer2}>
-          <Text style={styles.text3}>Forgot Password </Text>
+          <Text style={styles.text3}
+          onPress={() =>
+            navigation.navigate('ForgotPass')}>Forgot Password </Text>
         </View>
 
         <View style={styles.splashBlueImageContainer3}>
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "10%",
+    marginTop: "5%",
   },
   splashBlueImageContainer3: {
     flex: 1,
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
   },
   datainput: {
     width:"100%",
-    padding: 10,
+    padding: 5,
     alignItems: 'center'
   },
   input: {
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
     padding: 12,
     width: 280,
     height: 50,
-    marginTop: 10,
+    marginTop: 8,
   },
   buttonText: {
     color: 'white',

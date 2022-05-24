@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "20%",
+    marginTop: "10%",
   },
   text1: {
     fontSize: 50,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "#FFFFFF",
     padding: 8,
-    marginTop: "30%",
+    marginTop: "18%",
     marginBottom: "10%",
     alignItems: 'center'
   },

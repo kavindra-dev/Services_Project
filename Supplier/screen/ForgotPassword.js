@@ -12,40 +12,46 @@ import {
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
-import auth from '@react-native-firebase/auth';
-import firebaserel from '@react-native-firebase/database';
 
 
-const CustomerLogin = ({navigation }) => {
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading,setLoading] = useState(false);
-
-  const customerLogin = async() =>{
-    setLoading(true)
-    if(!email || !password )
-    {
-      alert("Please enter credential details.")
-      return
-    } else {
-      try {
-        const result = await auth().signInWithEmailAndPassword(email,password)
-        .then(navigation.navigate('DeliverAddress'))
-        setLoading(false)
-      } catch (error) {
-        alert("Something went wrong!!! \n Please try again later.")
-        setLoading(false)
-      }  
-    }
-  }
-
-  
+const ForgotPassword = ({navigation }) => {
+  const [passVal,setPassVal] = useState(false);
 
   return (
     <ScrollView style={styles.splashFlexGrow}>
+      {passVal === true?
+      <View>
+        <View style={styles.splashBlueImageContainer}>
+          <Text style={styles.text1}>Update Your {"\n"}Password</Text>
+          <View style={styles.datainput}>
+            <TextInput style={styles.input}
+              placeholder="Enter New Password"
+              placeholderTextColor={"#DCDCDC"}/>
+          </View>
+
+          <View style={styles.datainput}>
+            <TextInput style={styles.input}
+              placeholder="Re-Enter New Password"
+              placeholderTextColor={"#DCDCDC"}/>
+          </View>
+        </View>
+        <View style={styles.splashBlueImageContainer3}>
+          <TouchableOpacity
+            style={styles.button}>
+              <Text style={styles.buttonText}
+              onPress={() => setPassVal(true)
+              }>Confirm</Text>
+            </TouchableOpacity>
+
+            {/* <Text style={styles.text4}
+            onPress={() =>
+              setPassVal(false)
+            }>&lt;&lt; Go Back</Text> */}
+          </View>
+      </View> :
+      <View>
       <View style={styles.splashBlueImageContainer}>
-        <Text style={styles.text1}>Log In</Text>
+        <Text style={styles.text1}>Reset Your Password</Text>
         <View style={styles.bgPic}>
           <Image source={CYCLINDER_LOGO}/>
         </View>
@@ -53,37 +59,25 @@ const CustomerLogin = ({navigation }) => {
 
         <View style={styles.datainput}>
         <TextInput style={styles.input}
-          placeholder="User Name"
-          placeholderTextColor={"#DCDCDC"}
-          defaultValue={email}
-          onChangeText={(email) => setEmail(email)}/>
-
-        <TextInput style={styles.input}
-          placeholder="Password"
-          placeholderTextColor={"#DCDCDC"}
-          defaultValue={password}
-          onChangeText={(password) => setPassword(password)}/>
+          placeholder="Enter your Email-Id"
+          placeholderTextColor={"#DCDCDC"}/>
         </View>
       </View>
-      <View style={styles.splashBlueImageContainer2}>
-          <Text style={styles.text3}
-          onPress={() =>
-            navigation.navigate('ForgotPass')}>Forgot Password </Text>
-        </View>
-
         <View style={styles.splashBlueImageContainer3}>
         <TouchableOpacity
           style={styles.button}>
             <Text style={styles.buttonText}
-            onPress={() =>  customerLogin()
-            }> Log In </Text>
+            onPress={() => setPassVal(true)
+            }> Continue -&gt; </Text>
           </TouchableOpacity>
 
-          <Text style={styles.text4}
+          {/* <Text style={styles.text4}
           onPress={() =>
-            navigation.navigate('CustomerRegister')
-          }>Register as a Customer</Text>
+            navigation.navigate('SupplierLogin')
+          }>&lt;&lt; Go Back</Text> */}
         </View>
+        </View>
+        }
     </ScrollView>
   );
 };
@@ -98,14 +92,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "8%",
+    marginTop: "10%",
   },
   splashBlueImageContainer3: {
     flex: 1,
     backgroundColor: "#FFFFFF",
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "8%",
+    marginTop: "10%",
   },
   splashBlueImageContainer2: {
     flex: 1,
@@ -162,7 +156,7 @@ const styles = StyleSheet.create({
   },
   datainput: {
     width:"100%",
-    padding: 8,
+    padding: 10,
     alignItems: 'center'
   },
   input: {
@@ -181,7 +175,7 @@ const styles = StyleSheet.create({
     padding: 12,
     width: 280,
     height: 50,
-    marginTop: 8,
+    marginTop: 10,
   },
   buttonText: {
     color: 'white',
@@ -198,4 +192,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default CustomerLogin;
+export default ForgotPassword;

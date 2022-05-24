@@ -37,8 +37,8 @@ const CustomerMap = ({navigation }) => {
   ];
 
   return (
-    <SafeAreaView style={styles.splashFlexGrow}>
-      <View style={styles.splashBlueImageContainer}>
+      <SafeAreaView style={styles.splashFlexGrow}>
+        <View style={styles.splashBlueImageContainer}>
           <MapView
           region={focusedLocation}
           provider={PROVIDER_GOOGLE}
@@ -55,16 +55,14 @@ const CustomerMap = ({navigation }) => {
               </MapView.Marker>
             ))}
           </MapView>
-      </View>
-      <View style={styles.splashBlueImageContainer2}>
+        </View>
+        <View style={styles.splashBlueImageContainer2}>
           <View style={styles.splashBlueImageContainer3}>
-          <Image source={Supplier_PIC}
-        style={styles.bgPic}/>
+            <Image source={Supplier_PIC} style={styles.bgPic}/>
           </View>
-       
-      </View>
-      <Text style={styles.text1}>Waiting for Supplier to Accept your Order</Text>
-    </SafeAreaView>
+        </View>
+        <Text style={styles.text1}>Waiting for Supplier to Accept your Order</Text>
+      </SafeAreaView>
   );
 };
 
