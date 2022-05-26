@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,9 +16,12 @@ import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
 import auth from '@react-native-firebase/auth';
 import firebaserel from '@react-native-firebase/database';
+import { AuthContext } from '../navigation/AuthProvider';
 
 
 const CustomerRegister = ({navigation }) => {
+
+  const {register} = useContext(AuthContext);
 
   const [fullName, setFullName] = useState('');
   const [userName, setUserName] = useState('');
@@ -26,6 +29,7 @@ const CustomerRegister = ({navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [resetpass, setResetPass] = useState('');
+  const [userType, setUserType] = useState(1);
   const [loading,setLoading] = useState(false);
 
   if(loading){
@@ -42,23 +46,8 @@ const CustomerRegister = ({navigation }) => {
       alert("Please enter same password.")
       return
     } else {
-      try {
-        const result = await auth().createUserWithEmailAndPassword(email,password);
-        firebaserel().ref('users').child(result.user.uid).set({
-          fullName:fullName,
-          userName:userName,
-          phone:phone,
-          email:result.user.email,
-          password:password,
-          uid:result.user.uid,
-          userType:"2"
-        })
-        .then(navigation.navigate('CustomerRegister'))
-        setLoading(false)
-      } catch (error) {
-        alert("Something went wrong!!! \n Please try again later.")
-        setLoading(false)
-      }
+      register(fullName,userName,phone,email,password,userType)
+      .then(navigation.navigate('CustomerLogin'));
     }
   }
 

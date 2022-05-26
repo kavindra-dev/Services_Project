@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -14,6 +14,7 @@ import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
 import auth from '@react-native-firebase/auth';
 import firebaserel from '@react-native-firebase/database';
+import { AuthContext } from '../navigation/AuthProvider';
 
 
 const CustomerLogin = ({navigation }) => {
@@ -22,6 +23,8 @@ const CustomerLogin = ({navigation }) => {
   const [password, setPassword] = useState('');
   const [loading,setLoading] = useState(false);
 
+  const {login} = useContext(AuthContext)
+
   const customerLogin = async() =>{
     setLoading(true)
     if(!email || !password )
@@ -29,14 +32,8 @@ const CustomerLogin = ({navigation }) => {
       alert("Please enter credential details.")
       return
     } else {
-      try {
-        const result = await auth().signInWithEmailAndPassword(email,password)
-        .then(navigation.navigate('DeliverAddress'))
-        setLoading(false)
-      } catch (error) {
-        alert("Something went wrong!!! \n Please try again later.")
-        setLoading(false)
-      }  
+      login(email,password)
+      .then(navigation.navigate('CustomerMap'))
     }
   }
 

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState,useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,10 +16,13 @@ import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
 import auth from '@react-native-firebase/auth';
 import firebaserel from '@react-native-firebase/database';
+import { AuthContext } from '../navigation/AuthProvider';
 
 
 
 const SupplierRegister = ({navigation }) => {
+
+  const {register} = useContext(AuthContext);
 
 const [fullName, setFullName] = useState('');
 const [userName, setUserName] = useState('');
@@ -43,24 +46,8 @@ if(loading){
       alert("Please enter same password.")
       return
     } else {
-      try {
-        const result = await auth().createUserWithEmailAndPassword(email,password);
-        firebaserel().ref('users').child(result.user.uid).set({
-          fullName:fullName,
-          userName:userName,
-          phone:phone,
-          email:result.user.email,
-          password:password,
-          uid:result.user.uid,
-          userType:"1"
-        })
-        .then(navigation.navigate('SupplierLogin'))
-        setLoading(false)
-      } catch (error) {
-        alert("Something went wrong!!! \n Please try again later.")
-        setLoading(false)
-      }
-       
+      register(fullName,userName,phone,email,password,userType)
+      .then(navigation.navigate("SupplierLogin"))
     }
    
   }
