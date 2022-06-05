@@ -1,6 +1,6 @@
 import React, {createContext, useState} from "react";
 import auth from '@react-native-firebase/auth';
-import firebaserel from '@react-native-firebase/database';
+import firebaserel, { firebase } from '@react-native-firebase/database';
 
 export const AuthContext = createContext();
 
@@ -13,7 +13,8 @@ export const AuthProvider = ({children}) => {
                 setUser,
                 login : async (email,password) =>{
                     try {
-                        await auth().signInWithEmailAndPassword(email,password);
+                        await auth().signInWithEmailAndPassword(email,password)
+                        .then(setUser(auth().currentUser().uid));
                     } catch (error) {
                         console.log(error);
                     }
@@ -40,6 +41,32 @@ export const AuthProvider = ({children}) => {
                         await auth().signOut();
                     } catch (error) {
                         console.log(error);
+                    }
+                },
+                orderAddress: async(address1, address2, userType, userId) =>{
+                    try {
+                        firebase.database().ref("orders/").child(userId).set({
+                            address1: address1,
+                            address2: address2,
+                            userType: userType,
+                            uid: userId,
+                            orderstatus : "0",
+                        })
+                    } catch (error) {
+                        
+                    } 
+                },
+                orderFinished: async(address1, address2, userType, userId) =>{
+                    try {
+                        firebase.database().ref("ordersDone/").child(userId).set({
+                            address1: address1,
+                            address2: address2,
+                            userType: userType,
+                            uid: userId,
+                            orderstatus : "3",
+                        })
+                    } catch (error) {
+                        
                     }
                 },
             }}>

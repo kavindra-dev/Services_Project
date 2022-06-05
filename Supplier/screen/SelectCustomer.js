@@ -20,7 +20,7 @@ const SelectCustomer = ({navigation}) => {
     <ScrollView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
         <Text style={styles.text1}>Gas App</Text>
-        <Text style={styles.text2}>Select 2 options below</Text>
+        <Text style={styles.text2}>Select from 2 options below</Text>
       </View>
       <View style={styles.splashBlueImageContainer}>
         <View style={styles.row}>

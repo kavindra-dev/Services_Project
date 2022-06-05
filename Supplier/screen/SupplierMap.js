@@ -1,5 +1,5 @@
 import Geolocation from '@react-native-community/geolocation';
-import React,{useState,useRef, useEffect} from 'react';
+import React,{useState,useRef, useEffect, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -9,6 +9,7 @@ import {
   useColorScheme,
   View,
   Image,
+  ActivityIndicator
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -21,9 +22,12 @@ import BELOW_LOC from '../assest/customer_avatar.png';
 import BELL from '../assest/bellok.png';
 import CLOSE from '../assest/close.png';
 import LOC from '../assest/sent.png';
+import { AuthContext } from '../navigation/AuthProvider';
 
 
 const SupplierMap = ({navigation }) => {
+
+  const {user, logout} = useContext(AuthContext);
 
 
   const [latit,setLatit] = useState(0);
@@ -37,8 +41,19 @@ const SupplierMap = ({navigation }) => {
   const [img,setImg] = useState(false);
   const [img1,setImg1] = useState(false);
   const [img2,setImg2] = useState(false);
+  const [loading,setLoading] = useState(false);
   const mapRef = useRef();
+
+  if(loading){
+    return <ActivityIndicator size="large" color="#0000FF"/>
+  } 
   
+  const supplierLogout = async() =>{
+    setLoading(true)
+    logout()
+    .then(navigation.navigate('SupplierLogin'));
+    setLoading(false);
+  }
 
   Geolocation.getCurrentPosition(position => {
     setLatit(position.coords.latitude),
@@ -115,7 +130,7 @@ const SupplierMap = ({navigation }) => {
           </MapView>
           <View style={styles.topBar}>
             <View style={styles.left_align}
-              onStartShouldSetResponder={() => navigation.navigate('SupplierLogin')}>
+              onStartShouldSetResponder={() => supplierLogout()}>
             <TouchableOpacity>
             <Image source={LOGOUT} size={28} />
             </TouchableOpacity> 

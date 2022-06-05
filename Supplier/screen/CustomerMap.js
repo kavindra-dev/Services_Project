@@ -1,4 +1,4 @@
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef, useContext} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -8,16 +8,34 @@ import {
   useColorScheme,
   View,
   Image,
+  ActivityIndicator
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
 import GREEN_ICON from '../assest/location.png';
+import { AuthContext } from '../navigation/AuthProvider';
+import LOGOUT from '../assest/tab_icon_more.png';
 
 
 
 const CustomerMap = ({navigation }) => {
+  const [loading,setLoading] = useState(false);
+  const {user, logout} = useContext(AuthContext);
+
+  if(loading){
+    return <ActivityIndicator size="large" color="#0000FF"/>
+  } 
+
+  const customerLogout = async() =>{
+    setLoading(true)
+    logout()
+    .then(navigation.navigate('CustomerLogin'));
+    setLoading(false);
+  }
+
+  
 
   const [focusedLocation, setFocusedLocation] = useState({
     latitude: 37.78825,
@@ -55,6 +73,14 @@ const CustomerMap = ({navigation }) => {
               </MapView.Marker>
             ))}
           </MapView>
+          <View style={styles.topBar}>
+            <View style={styles.left_align}
+              onStartShouldSetResponder={() => customerLogout()}>
+            <TouchableOpacity>
+            <Image source={LOGOUT} size={28} />
+            </TouchableOpacity> 
+          </View>
+          </View>
         </View>
         <View style={styles.splashBlueImageContainer2}>
           <View style={styles.splashBlueImageContainer3}>
@@ -178,12 +204,19 @@ const styles = StyleSheet.create({
   },
   topBar: {
     position: 'absolute',
-    width: 100,
+    width: "100%",
     top: 20,
     zIndex: 99,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
+  },
+  left_align: {
+    width: 30,
+    height: 30,
+    backgroundColor: "#FFFFFF",
+    padding: 5,
+    borderRadius: 100,
   },
 
 });

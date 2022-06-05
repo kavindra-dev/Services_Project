@@ -13,7 +13,7 @@ import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
 import Supplier_PIC from '../assest/supplier_option.png';
 import auth from '@react-native-firebase/auth';
-import firebaserel from '@react-native-firebase/database';
+import firebaserel, { firebase } from '@react-native-firebase/database';
 import { AuthContext } from '../navigation/AuthProvider';
 
 
@@ -23,7 +23,18 @@ const CustomerLogin = ({navigation }) => {
   const [password, setPassword] = useState('');
   const [loading,setLoading] = useState(false);
 
-  const {login} = useContext(AuthContext)
+  const {login, user} = useContext(AuthContext)
+
+  const checkorderStatus = (id) =>{
+    firebase.database().ref("orders").child(id)
+    .on('value', snapshot =>{
+      if (snapshot.exists() && snapshot.val().orderstatus === "0") {
+        navigation.navigate('CustomerMap')
+      } else {
+        navigation.navigate('DeliverAddress')
+      }
+    })
+  }
 
   const customerLogin = async() =>{
     setLoading(true)
@@ -33,7 +44,8 @@ const CustomerLogin = ({navigation }) => {
       return
     } else {
       login(email,password)
-      .then(navigation.navigate('CustomerMap'))
+      .then(checkorderStatus(user.uid))
+      //navigation.navigate('DeliverAddress')
     }
   }
 

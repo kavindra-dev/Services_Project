@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState,useContext, useEffect} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -12,8 +12,37 @@ import {
   TouchableOpacity
 } from 'react-native';
 import CYCLINDER_LOGO from '../assest/order_now.png';
+import { AuthContext } from '../navigation/AuthProvider';
 
 const DeliverAddress = ({navigation }) => {
+
+  const [address1,setAddress1] = useState('');
+  const [address2,setAddress2] = useState('');
+  const [type, setType] = useState('2');
+  const [id, setId] = useState('');
+  const [loading,setLoading] = useState(false);
+
+  const {orderAddress} = useContext(AuthContext)
+  const {user} = useContext(AuthContext);
+
+  const submitAddress = async() =>{
+    if(!address1 || !address2 )
+    {
+      alert("Please enter Address details.")
+      return
+    } else {
+      setLoading(true)
+      orderAddress(address1,address2, type, id)
+      .then(navigation.navigate('CustomerMap'));
+      setLoading(true)
+    }
+
+  }
+
+  useEffect(() =>{
+    setId(user.uid);
+  },[]);
+
   return (
     <ScrollView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
@@ -23,14 +52,18 @@ const DeliverAddress = ({navigation }) => {
         <View style={styles.splashBlueImageContainer2}>
             <TextInput style={styles.input}
             placeholder="214 Lorem"
-            placeholderTextColor={"#DCDCDC"}/>
+            placeholderTextColor={"#DCDCDC"}
+            defaultValue={address1}
+            onChangeText={(address1) => setAddress1(address1)}/>
 
             <TextInput style={styles.input}
             placeholder="Fleet Street"
-            placeholderTextColor={"#DCDCDC"}/>
+            placeholderTextColor={"#DCDCDC"}
+            defaultValue={address2}
+            onChangeText={(address2) => setAddress2(address2)}/>
         
         <View style={styles.bgPic}
-        onStartShouldSetResponder={() => navigation.navigate('CustomerMap')}>
+        onStartShouldSetResponder={() => submitAddress()}>
             <Image source={CYCLINDER_LOGO}/>
         </View>
         </View>
