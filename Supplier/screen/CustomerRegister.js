@@ -32,20 +32,26 @@ const CustomerRegister = ({navigation }) => {
   const [userType, setUserType] = useState(1);
   const [loading,setLoading] = useState(false);
 
-  if(loading){
+  /* if(loading){
     return <ActivityIndicator size="large" color="#0000FF"/>
-  } 
+  }  */
 
   const registerCustomer = async() =>{
     setLoading(true)
     if(!fullName || !userName || !phone || !email || !password || !resetpass)
     {
       alert("Please enter all the details.")
+      setLoading(false)
       return
     } else if(password !== resetpass){
       alert("Please enter same password.")
+      setLoading(false)
       return
-    } else {
+    } else if(password.length<=6){
+      alert("Password Should be more than 6 Characters.")
+      setLoading(false)
+      return
+    }else{
       register(fullName,userName,phone,email,password,userType)
       .then(navigation.navigate('CustomerLogin'));
     }

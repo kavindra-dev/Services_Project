@@ -30,6 +30,7 @@ const [phone, setPhone] = useState('');
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
 const [resetpass, setResetPass] = useState('');
+const [userType, setUserType] = useState(2);
 const [loading,setLoading] = useState(false);
 
 if(loading){

@@ -23,7 +23,8 @@ import BELL from '../assest/bellok.png';
 import CLOSE from '../assest/close.png';
 import LOC from '../assest/sent.png';
 import { AuthContext } from '../navigation/AuthProvider';
-
+import { PermissionsAndroid } from 'react-native';
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 
 const SupplierMap = ({navigation }) => {
 
@@ -42,6 +43,8 @@ const SupplierMap = ({navigation }) => {
   const [img1,setImg1] = useState(false);
   const [img2,setImg2] = useState(false);
   const [loading,setLoading] = useState(false);
+  const [gpsEnabled, setGpsEnabled] = useState(false)
+
   const mapRef = useRef();
 
   if(loading){
@@ -54,11 +57,74 @@ const SupplierMap = ({navigation }) => {
     .then(navigation.navigate('SupplierLogin'));
     setLoading(false);
   }
+  const checkPermission = () => {
+    try {
+      request(
+          Platform.select({
+            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+          })
+        )
+        .then(res => {
+          if (res === 'granted') {
+            setPermissionCheck(true);
+          } else {
+            setPermissionCheck(false);
+          }
+        })
+    } catch (error) {
 
-  Geolocation.getCurrentPosition(position => {
-    setLatit(position.coords.latitude),
-    setLongit(position.coords.longitude)
+    }
+  };
+  const onLocationEnablePressed = () => {
+    if (Platform.OS === 'android') {
+      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
+      .then(
+        setGpsEnabled(true)
+      ).catch(err => {
+        if(err.code === 'ERR00'){
+          setGpsEnabled(false)
+          alert("Error!!! \n\nPlease enable GPS to access your location." );
+        }
+      });
+    }
+  }
+  useEffect(() => {
+      checkPermission();
+      onLocationEnablePressed();
+      Geolocation.getCurrentPosition(position => {
+        setStaffLat(position.coords.latitude),
+          setStaffLot(position.coords.longitude)
+      });
   });
+/*   const requestPermision = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+            title: 'Location Access Required',
+            message: 'This app needs your location access',
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK"
+          }
+        )
+        if("granted" === PermissionsAndroid.RESULTS.GRANTED) {
+          alert('Connection Success');
+          Geolocation.getCurrentPosition(position => {
+            setLatit(position.coords.latitude),
+            setLongit(position.coords.longitude)
+          });
+        } else {
+          console.log("location permission denied")
+          alert("Location permission denied");
+        }
+      } catch (err) {
+        console.warn(err)
+      }
+    }
+  }
+requestPermision(); */
 
   const onMarkerPress = (index) =>{
    if(index === 1){
@@ -74,8 +140,8 @@ const SupplierMap = ({navigation }) => {
   }
 
   const [focusedLocation, setFocusedLocation] = useState({
-    latitude: latit,
-    longitude: longit,
+    latitude: 20.5937,
+    longitude: 78.9629,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
@@ -84,14 +150,14 @@ const SupplierMap = ({navigation }) => {
     {
       title: "My Location",
       coordinates: {
-        latitude: latit,
-        longitude: longit,
+        latitude: 20.5937,
+        longitude: 78.9629,
       },
     },
     {
       title: "Location 1",
       coordinates: {
-        latitude: 37.5245,
+        latitude: 20.5937,
         longitude: -122.4324,
       },
     },
