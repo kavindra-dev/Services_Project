@@ -8,6 +8,7 @@ import {
   useColorScheme,
   View,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import CYCLINDER_LOGO from '../assest/gas_tank.png';
@@ -24,7 +25,6 @@ const CustomerLogin = ({navigation }) => {
   const [loading,setLoading] = useState(false);
 
   const {login, user} = useContext(AuthContext)
-
   const checkorderStatus = (id) =>{
     firebase.database().ref("orders").child(id)
     .on('value', snapshot =>{
