@@ -9,6 +9,7 @@ import {
   useColorScheme,
   View,
   Image,
+  Platform,
   ActivityIndicator
 } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
@@ -31,8 +32,8 @@ const SupplierMap = ({navigation }) => {
   const {user, logout} = useContext(AuthContext);
 
 
-  const [latit,setLatit] = useState(0);
-  const [longit,setLongit] = useState(0);
+  const [latit,setStaffLat] = useState(0);
+  const [longit,setStaffLot] = useState(0);
   const [popup1,setPop1] = useState(false);
   const [popup2,setPop2] = useState(false);
   const [popup3,setPop3] = useState(false);
@@ -44,6 +45,7 @@ const SupplierMap = ({navigation }) => {
   const [img2,setImg2] = useState(false);
   const [loading,setLoading] = useState(false);
   const [gpsEnabled, setGpsEnabled] = useState(false)
+  const [locationStatus,setLocationStatus] = useState('');
 
   const mapRef = useRef();
 
@@ -57,74 +59,44 @@ const SupplierMap = ({navigation }) => {
     .then(navigation.navigate('SupplierLogin'));
     setLoading(false);
   }
-  const checkPermission = () => {
-    try {
-      request(
-          Platform.select({
-            android: PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-            ios: PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-          })
-        )
-        .then(res => {
-          if (res === 'granted') {
-            setPermissionCheck(true);
-          } else {
-            setPermissionCheck(false);
-          }
-        })
-    } catch (error) {
 
-    }
-  };
-  const onLocationEnablePressed = () => {
-    if (Platform.OS === 'android') {
-      RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({interval: 10000, fastInterval: 5000})
-      .then(
-        setGpsEnabled(true)
-      ).catch(err => {
-        if(err.code === 'ERR00'){
-          setGpsEnabled(false)
-          alert("Error!!! \n\nPlease enable GPS to access your location." );
-        }
-      });
-    }
-  }
-  useEffect(() => {
-      checkPermission();
-      onLocationEnablePressed();
-      Geolocation.getCurrentPosition(position => {
-        setStaffLat(position.coords.latitude),
-          setStaffLot(position.coords.longitude)
-      });
-  });
-/*   const requestPermision = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
-            title: 'Location Access Required',
-            message: 'This app needs your location access',
-            buttonNeutral: "Ask Me Later",
-            buttonNegative: "Cancel",
-            buttonPositive: "OK"
-          }
-        )
-        if("granted" === PermissionsAndroid.RESULTS.GRANTED) {
-          alert('Connection Success');
-          Geolocation.getCurrentPosition(position => {
-            setLatit(position.coords.latitude),
-            setLongit(position.coords.longitude)
-          });
-        } else {
-          console.log("location permission denied")
-          alert("Location permission denied");
-        }
-      } catch (err) {
-        console.warn(err)
+  const getOneTimeLocation = () =>{
+    setLocationStatus('Getting Location ...');
+    Geolocation.getCurrentPosition(
+      (position) => {
+        setLocationStatus('You are Here');
+        const currentLongitude = position.coords.longitude;
+        const currentLatitude = position.coords.latitude;
+        setStaffLat(currentLatitude)
+        setStaffLot(currentLongitude)
       }
-    }
-  }
-requestPermision(); */
+    )
+  } 
+  useEffect(() => {
+      const requestLocationPermission = async() =>{
+        if(Platform.OS === 'ios'){
+          getOneTimeLocation();
+        } else {
+          try {
+            const granted = await PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+              {
+                title: 'Location Access Required',
+                message: 'This App needs to Access your location',
+              }
+            );
+            if(granted === PermissionsAndroid.RESULTS.GRANTED){
+              getOneTimeLocation();
+            } else {
+              setLocationStatus('Permission Denied');
+            }
+          } catch (error) {
+            console.warn(err);
+          }
+        }
+      };
+      requestLocationPermission();
+  },[]);
 
   const onMarkerPress = (index) =>{
    if(index === 1){
@@ -140,18 +112,18 @@ requestPermision(); */
   }
 
   const [focusedLocation, setFocusedLocation] = useState({
-    latitude: 20.5937,
-    longitude: 78.9629,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
+    latitude: latit === 0 ? 20.5937:latit,
+    longitude: longit === 0 ? 78.9629:longit,
+    latitudeDelta: 0.0043,
+    longitudeDelta: 0.00421,
   });
 
   const markers = [
     {
       title: "My Location",
       coordinates: {
-        latitude: 20.5937,
-        longitude: 78.9629,
+        latitude: latit?latit:0,
+        longitude: longit?longit:0,
       },
     },
     {
@@ -174,15 +146,14 @@ requestPermision(); */
     <SafeAreaView style={styles.splashFlexGrow}>
       <View style={styles.splashBlueImageContainer}>
           <MapView
-          region={focusedLocation}
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           ref={mapRef}
           initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitude: latit === 0 ?37.78825: latit,
+            longitude: longit=== 0 ? -122.4324 : longit,
+            latitudeDelta: 1.5,
+            longitudeDelta: 1.5,
           }}>
             {markers.map((marker,index) => (
               <MapView.Marker coordinate={marker.coordinates} title={marker.title} draggable
